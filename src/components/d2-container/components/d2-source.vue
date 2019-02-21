@@ -1,11 +1,12 @@
 <template>
-  <div
+  <!-- <div
     v-if="show"
     class="d2-source"
     :class="{ 'd2-source--active': isActive }"
     @click="handleClick">
     <d2-icon name="code"/> SourceCode
-  </div>
+  </div> -->
+  <div></div>
 </template>
 
 <script>

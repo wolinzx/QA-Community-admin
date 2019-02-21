@@ -14,12 +14,12 @@ import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
 import D2Crud from '@d2-projects/d2-crud'
-import VueUeditorWrap from 'vue-ueditor-wrap'
+import VCharts from 'v-charts'
 
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(D2Crud)
-Vue.component('VueUeditorWrap', VueUeditorWrap)
+Vue.use(VCharts)
 
 new Vue({
   router,

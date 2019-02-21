@@ -33,8 +33,11 @@
         <el-form-item label="关注数">
           <span>{{formLabelAlign.follows}}</span>
         </el-form-item>
-        <el-form-item label="举报处理">
-          <el-tag :type="!!formLabelAlign.handle ? 'danger' : 'success'">{{!!formLabelAlign.handle ? '已封禁' : '未封禁'}}</el-tag>
+        <el-form-item label="举报类型">
+          <span>{{formLabelAlign.type}}</span>
+        </el-form-item>
+        <el-form-item label="举报状态">
+          <el-tag :type="!!formLabelAlign.handled ? 'danger' : 'success'">{{!!formLabelAlign.handled ? '已封禁' : '未封禁'}}</el-tag>
         </el-form-item>
       </el-form>
       <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign" v-else>
@@ -51,8 +54,11 @@
         <el-form-item label="回答时间">
           <span>{{date_format(formLabelAlign.answerDate)}}</span>
         </el-form-item>
-        <el-form-item label="举报处理">
-          <el-tag :type="formLabelAlign.handle ? 'danger' : 'success'">{{formLabelAlign.handle ? '已封禁' : '未封禁'}}</el-tag>
+        <el-form-item label="举报类型">
+          <span>{{formLabelAlign.type}}</span>
+        </el-form-item>
+        <el-form-item label="举报状态">
+          <el-tag :type="formLabelAlign.handled ? 'danger' : 'success'">{{formLabelAlign.handled ? '已封禁' : '未封禁'}}</el-tag>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -91,14 +97,24 @@ export default {
           }
         },
         {
-          title: 'ID',
-          key: '_id',
-          width: 220
-        },
-        {
           title: '举报者',
           key: 'reporter',
           width: 120
+        },
+        {
+          title: '举报类型',
+          key: 'reportType',
+          width: 120,
+          filters: [
+            { text: '垃圾广告信息', value: '垃圾广告信息' },
+            { text: '涉嫌侵权', value: '涉嫌侵权' },
+            { text: '有害信息', value: '有害信息' },
+            { text: '低质问题', value: '低质问题' }
+          ],
+          filterMethod (value, row) {
+            return row.reportType === value
+          },
+          filterPlacement: 'bottom-end'
         },
         {
           title: '问题标题',
@@ -205,12 +221,14 @@ export default {
       getReportGet({
         ...this.pagination
       }).then(res => {
-        for (const i of res.docs) {
-          i['handle'] = i.reportQId ? i.reportQId.handled : i.reportAId.handled
+        if (res.docs.length) {
+          for (const i of res.docs) {
+            i['handle'] = i.reportQId ? i.reportQId.handled : i.reportAId.handled
+          }
+          this.data = res.docs
+          console.log(this.data)
+          this.pagination.total = res.total
         }
-        this.data = res.docs
-        console.log(this.data)
-        this.pagination.total = res.total
         this.loading = false
       }).catch(err => {
         console.log(err)
@@ -244,7 +262,8 @@ export default {
     handleCustomEvent2 ({ index, row }) {
       this.switchQA = !!row.reportQId
       this.formLabelAlign = row.reportQId || row.reportAId
-      this.formLabelAlign['handle'] = row.handle
+      // this.formLabelAlign['handle'] = row.handle
+      this.formLabelAlign['type'] = row.reportType
       this.dialogVisible = true
     }
   }

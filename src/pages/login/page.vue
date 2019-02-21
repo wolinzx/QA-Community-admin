@@ -38,14 +38,14 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
+                <!-- <el-form-item prop="code">
                   <el-input type="text" v-model="formLogin.code" placeholder="- - - -">
                     <template slot="prepend">验证码</template>
                     <template slot="append">
                       <img class="login-code" src="./image/login-code.png">
                     </template>
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
               </el-form>
             </el-card>
@@ -63,12 +63,14 @@
         </div>
         <div class="page-login--content-footer">
           <p class="page-login--content-footer-options">
-            <a href="#">帮助</a>
+            <!-- <a href="#">帮助</a>
             <a href="#">隐私</a>
-            <a href="#">条款</a>
+            <a href="#">条款</a> -->
+            Q & A Community Admin
           </p>
           <p class="page-login--content-footer-copyright">
-            Copyright <d2-icon name="copyright"/> 2018 D2 Projects 开源组织出品 <a href="https://github.com/FairyEver">@FairyEver</a>
+            <!-- Copyright <d2-icon name="copyright"/> 2018 D2 Projects 开源组织出品 <a href="https://github.com/FairyEver">@FairyEver</a> -->
+            Powered by D2 Projects <a href="https://github.com/FairyEver">@FairyEver</a>
           </p>
         </div>
       </div>
@@ -118,8 +120,8 @@ export default {
       ],
       // 表单
       formLogin: {
-        username: 'admin',
-        password: 'admin',
+        username: '',
+        password: '',
         code: 'v9am'
       },
       // 校验

@@ -3,16 +3,17 @@
     <div class="d2-page-cover__logo">
       <slot/>
     </div>
-    <p class="d2-page-cover__title">D2 Admin {{$version}}</p>
-    <p class="d2-page-cover__sub-title">优雅的中后台集成方案</p>
-    <p class="d2-page-cover__build-time">FINAL BUILD TIME {{$buildTime}}</p>
+    <p class="d2-page-cover__title">Q & A Community Admin</p>
+    <p class="d2-page-cover__sub-title">网络问答社区后台</p>
+    <!-- <p class="d2-page-cover__build-time">FINAL BUILD TIME {{$buildTime}} -->
+    <p class="d2-page-cover__build-time">Powered by D2 Projects <a href="https://github.com/FairyEver">@FairyEver</a></p>
     <slot name="footer"/>
-    <a target="blank" href="https://github.com/d2-projects/d2-admin">
+    <!-- <a target="blank" href="https://github.com/d2-projects/d2-admin">
       <img
         style="position: absolute; top: 0; right: 0; border: 0; width: 150px;"
         src="./image/darkblue@2x.png"
         alt="Fork me on GitHub">
-    </a>
+    </a> -->
   </div>
 </template>
 

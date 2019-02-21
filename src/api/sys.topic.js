@@ -25,6 +25,14 @@ export function deleteTopicGet (params) {
   })
 }
 
+export function getSomeTopicDetailGet (params) {
+  return request({
+    url: '/getSomeTopicDetailGet',
+    method: 'get',
+    params
+  })
+}
+
 export function addTopicGet (params) {
   return request({
     url: '/addTopicGet',
