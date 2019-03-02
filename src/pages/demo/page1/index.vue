@@ -14,7 +14,10 @@
       @custom-emit-2="handleCustomEvent2"
       @dialog-cancel="handleDialogCancel">
       <el-form slot="header" :rules="rules" :inline="true" ref="ruleForm" :model="formInline" class="demo-form-inline">
-        <el-form-item label="话题名称" prop="queryInput">
+        <el-form-item>
+          <el-button type="primary" circle icon="el-icon-refresh" @click="fetchData"></el-button>
+        </el-form-item>
+        <el-form-item prop="queryInput">
           <!-- <el-input v-model="formInline.user" placeholder="审批人"></el-input> -->
           <el-input v-model="formInline.queryInput" placeholder="请输入话题名称"></el-input>
         </el-form-item>
@@ -22,9 +25,6 @@
           <!-- <el-button type="primary" @click="onSubmit">查询</el-button> -->
           <el-button type="primary" @click="queryTopic">查询</el-button>
         </el-form-item>
-        <!-- <el-form-item>
-          <el-button type="danger" @click="deleteSelect(selectionTopics)" :disabled="!selection.length">删除选中</el-button>
-        </el-form-item> -->
       </el-form>
       <!-- <el-input slot="header" v-model="queryInput" placeholder="请输入内容"></el-input>
       <el-button slot="header" style="margin-bottom: 5px" @click="queryTopic">查询</el-button> -->
@@ -73,6 +73,7 @@ import { getTopicGet, getSomeTopicDetailGet, deleteTopicGet, addTopicGet } from 
 import EditQuill from '../component/edit-quill'
 import Upload from '../component/upload'
 import Tag from '../component/Tag'
+import Image from '../component/image'
 export default {
   name: 'page1',
   components: {
@@ -92,15 +93,15 @@ export default {
       selection: [],
       selectionTopics: [],
       rules: {
-        // queryInput: [
-        //   { required: true, message: '请输入话题名称', trigger: 'blur' }
-        // ]
+        queryInput: [
+          { required: true, message: '请输入话题名称', trigger: 'blur' }
+        ]
       },
       columns: [
         {
           title: '状态',
           key: 'topicHandled',
-          width: 100,
+          width: 80,
           filters: [
             { text: '未禁用', value: false },
             { text: '已禁用', value: true }
@@ -114,9 +115,12 @@ export default {
           }
         },
         {
-          title: 'ID',
-          key: '_id',
-          width: 220
+          title: '话题图片',
+          key: 'topicAvatar',
+          width: 100,
+          component: {
+            name: Image
+          }
         },
         {
           title: '话题名称',
@@ -126,7 +130,10 @@ export default {
         {
           title: '话题描述',
           key: 'topicDescribe',
-          showOverflowTooltip: true
+          showOverflowTooltip: true,
+          formatter: (row, column, cellValue, index) => {
+            return cellValue.replace(/<[^>]+>/g, '')
+          }
         },
         {
           title: '提问数',
@@ -290,22 +297,26 @@ export default {
       this.deleteSelect(row.topicName)
     },
     queryTopic () {
-      if (this.formInline.queryInput) {
-        this.loading = true
-        getSomeTopicDetailGet({
-          topicName: this.formInline.queryInput
-        }).then(res => {
-          console.log(res)
-          this.data = res
-          this.pagination.total = res.length
-          this.loading = false
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        this.fetchData()
-        // return false
-      }
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          if (this.formInline.queryInput) {
+            this.loading = true
+            getSomeTopicDetailGet({
+              topicName: this.formInline.queryInput
+            }).then(res => {
+              console.log(res)
+              this.data = res
+              this.pagination.total = res.length
+              this.loading = false
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     deleteSelect (topicName) {
       deleteTopicGet({

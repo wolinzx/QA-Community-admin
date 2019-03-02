@@ -10,9 +10,14 @@
       :rowHandle="rowHandle"
       @custom-emit="handleCustomEvent"
       @custom-emit-2="handleCustomEvent2">
+      <el-form slot="header">
+        <el-form-item>
+          <el-button type="primary" circle icon="el-icon-refresh" @click="fetchData"></el-button>
+        </el-form-item>
+      </el-form>
     </d2-crud>
     <el-dialog
-      title="提示"
+      :title="`被举报${type}详情`"
       :visible.sync="dialogVisible"
       width="60%"
       :before-close="handleClose">
@@ -117,7 +122,7 @@ export default {
           filterPlacement: 'bottom-end'
         },
         {
-          title: '问题标题',
+          title: '问题',
           key: 'reportQId.title',
           formatter: (row, column, cellValue, index) => {
             if (!cellValue) {
@@ -129,13 +134,15 @@ export default {
           showOverflowTooltip: true
         },
         {
-          title: '回答标题',
+          title: '回答',
           key: 'reportAId.contentData',
           formatter: (row, column, cellValue, index) => {
             if (!cellValue) {
               return '无'
             } else {
-              return cellValue
+              let data = cellValue.replace(/<[^>]+>/g, '')
+              let data1 = data.replace(/编辑于\s[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}\s·\s著作权归作者所有/ig, '')
+              return data1
             }
           },
           showOverflowTooltip: true
@@ -192,7 +199,8 @@ export default {
         pageSize: 10,
         total: 0
       },
-      switchQA: false
+      switchQA: false,
+      type: ''
     }
   },
   mounted () {
@@ -241,17 +249,19 @@ export default {
     },
     handleCustomEvent ({ index, row }) {
       console.log(row.reportQId)
+      console.log(row.reportAId)
       let params = {
         reportQId: row.reportQId ? row.reportQId._id : '',
         reportAId: row.reportAId ? row.reportAId._id : '',
         handle: !row.handle
       }
+      console.log(params)
       getHandleReportGet(params).then(res => {
         console.log(res)
         if (res) {
           this.fetchData()
           this.$message({
-            message: `${row.handled ? '解除' : '封禁'}成功`,
+            message: `${row.handle ? '解除' : '封禁'}成功`,
             type: 'success'
           })
         }
@@ -261,6 +271,11 @@ export default {
     },
     handleCustomEvent2 ({ index, row }) {
       this.switchQA = !!row.reportQId
+      if (this.switchQA) {
+        this.type = '提问'
+      } else {
+        this.type = '回答'
+      }
       this.formLabelAlign = row.reportQId || row.reportAId
       // this.formLabelAlign['handle'] = row.handle
       this.formLabelAlign['type'] = row.reportType

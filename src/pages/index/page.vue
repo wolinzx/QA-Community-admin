@@ -1,7 +1,7 @@
 <template>
   <d2-container :filename="filename" class="page">
     <d2-page-cover>
-      <img src="./image/logo.png" alt="">
+      <img :src="`${$baseUrl}image/logo.png`" alt="">
     </d2-page-cover>
   </d2-container>
 </template>
